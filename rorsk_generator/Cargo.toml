@@ -1,0 +1,11 @@
+[package]
+name = "rorsk_generator"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+glsl-to-spirv = "0.1.7"
+sha256 = "1.1.4"
+vulkano = "0.33.0"
