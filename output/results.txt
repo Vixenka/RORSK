@@ -1,0 +1,97 @@
+
+Problem `i32-div` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 2481273
+Problem `i32-sub` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-add` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-mul` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-mul` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-div` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 2481273
+Problem `i32-sub` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-add` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-mul` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-add` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-sub` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-sub` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-mul` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-add` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-div` on unconformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 728795
+Problem `f32-div` on conformant was tested with devices:
+  - NVIDIA RTX 4080
+  - Google Swiftshader
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 93818

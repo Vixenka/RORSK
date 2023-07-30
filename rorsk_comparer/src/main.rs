@@ -6,13 +6,14 @@ lazy_static::lazy_static! {
     static ref VENDOR_IDS: HashMap<u32, &'static str> = {
         let mut m = HashMap::new();
         m.insert(4318, "NVIDIA");
+        m.insert(6880, "Google");
         m
     };
 
     static ref DEVICE_IDS: HashMap<u32, &'static str> = {
         let mut m = HashMap::new();
-        m.insert(9989, "Test");
         m.insert(9988, "RTX 4080");
+        m.insert(49374, "Swiftshader");
         m
     };
 }
@@ -93,17 +94,13 @@ fn compare_task(problem_name: String, data: Vec<CompareTask>, is_conformant: boo
     let target = fs::read(&data[0].path).unwrap();
 
     let mut count: u64 = 0;
-    let mut total: f64 = 0.0;
 
     for task in data.iter().skip(1) {
         let read = fs::read(&task.path).unwrap();
         let mut target_temp = target.iter();
         let mut read_temp = read.iter();
-        while let Some(difference) = get_difference(&mut target_temp, &mut read_temp, type_name) {
-            if difference != 0.0 {
-                if difference.is_finite() {
-                    total += difference;
-                }
+        while let Some(difference) = compare_difference(&mut target_temp, &mut read_temp, type_name, is_conformant) {
+            if difference {
                 count += 1;
             }
         }
@@ -120,30 +117,42 @@ fn compare_task(problem_name: String, data: Vec<CompareTask>, is_conformant: boo
     message.push_str("\nResults:");
     message.push_str(&format!("\n  - Data count: {} bits", target.len() * 8));
     message.push_str(&format!("\n  - Number of differences: {}", count));
-    message.push_str(&format!("\n  - Total difference: {}", total));
-    message.push_str(&format!("\n  - Average difference: {}\n", match count > 0 {
-        true => total / count as f64,
-        false => 0.0
-    }));
 
     let mut lock = PRINT_MUTEX.lock().unwrap();
     lock.push_str(&message);
     println!("{}", message);
 }
 
-fn get_difference(expected: &mut Iter<'_, u8>, data: &mut Iter<'_, u8>, type_name: &str) -> Option<f64> {
+fn compare_difference(expected: &mut Iter<'_, u8>, data: &mut Iter<'_, u8>, type_name: &str, is_conformant: bool) -> Option<bool> {
     match type_name {
         "i32" => {
             if let Some(a) = read_i32(expected) {
                 if let Some(b) = read_i32(data) {
-                    return Some((a - b).abs() as f64);
+                    if a != b {
+                        //println!("i32 {:b} {:b} {}", a, b, (a - b).abs());
+                    }
+
+                    return Some(a != b);
                 }
             }
         }
         "f32" => {
             if let Some(a) = read_f32(expected) {
                 if let Some(b) = read_f32(data) {
-                    return Some((a - b).abs() as f64);
+                    let compare;
+                    if a.is_finite() {
+                        compare = a.to_bits() != b.to_bits();
+                    } else if a.is_nan() {
+                        compare = !b.is_nan();
+                    } else {
+                        assert!(a.is_infinite());
+                        compare = !b.is_infinite();
+                    }
+
+                    if compare && is_conformant {
+                        println!("f32 {:b} {:b} {}", a.to_bits(), b.to_bits(), (a.to_bits() as i64 - b.to_bits() as i64).abs());
+                    }
+                    return Some(compare);
                 }
             }
         }
