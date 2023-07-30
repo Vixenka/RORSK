@@ -8,7 +8,7 @@ use vulkano::{
     },
     device::{
         physical::PhysicalDeviceType, Device, DeviceCreateInfo, DeviceExtensions, QueueCreateInfo,
-        QueueFlags,
+        QueueFlags, Features,
     },
     instance::{Instance, InstanceCreateInfo},
     memory::allocator::{AllocationCreateInfo, MemoryUsage, StandardMemoryAllocator},
@@ -79,6 +79,10 @@ pub fn run<T>(
                 queue_family_index,
                 ..Default::default()
             }],
+            enabled_features: Features {
+                shader_float64: true,
+                ..Default::default()
+            },
             ..Default::default()
         },
     )

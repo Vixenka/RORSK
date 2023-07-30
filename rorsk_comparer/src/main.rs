@@ -150,7 +150,7 @@ fn compare_difference(expected: &mut Iter<'_, u8>, data: &mut Iter<'_, u8>, type
                     }
 
                     if compare && is_conformant {
-                        println!("f32 {:b} {:b} {}", a.to_bits(), b.to_bits(), (a.to_bits() as i64 - b.to_bits() as i64).abs());
+                        //println!("f32 {:b} {:b} {}", a.to_bits(), b.to_bits(), (a.to_bits() as i64 - b.to_bits() as i64).abs());
                     }
                     return Some(compare);
                 }

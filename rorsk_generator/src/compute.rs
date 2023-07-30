@@ -49,8 +49,8 @@ impl<T> Compute<T> where T: BufferContents + Clone {
         self.compute_impl(problem_name, &spirv_code, false);
 
         let conformant = conformant::process(spirv_code);
-        let mut file = File::create(problem_name).unwrap();
-        file.write_all(&conformant).unwrap();
+        //let mut file = File::create(problem_name).unwrap();
+        //file.write_all(&conformant).unwrap();
 
         self.compute_impl(problem_name, &conformant, true);
     }

@@ -77,6 +77,28 @@ impl<'a> Buffer<'a> {
         id
     }
 
+    fn get_op_type_float(&mut self, width: u32) -> u32 {
+        if width == 64 {
+            // Enable Float64 capabilty.
+            self.vec.insert(7, 17 | (2 << 16));
+            self.vec.insert(8, 10);
+
+            self.i += 2;
+            self.op_type_index += 2;
+        }
+
+        self.bound += 1;
+        let id = self.bound;
+        self.vec.insert(self.op_type_index, 22 | (3 << 16));
+        self.vec.insert(self.op_type_index + 1, id);
+        self.vec.insert(self.op_type_index + 2, width);
+
+        self.i += 3;
+        self.op_type_index += 3;
+
+        id
+    }
+
     fn get_const_i32(&mut self, value: u32) -> u32 {
         let i32_id = self.get_op_type_int(true);
 
@@ -94,8 +116,27 @@ impl<'a> Buffer<'a> {
     }
 
     fn op_fdiv(&mut self) {
-        let u32_id = self.get_op_type_int(false);
-        let i32_3 = self.get_const_i32(3);
+        let u64_id = self.get_op_type_float(64);
+
+        let original_lhs_id = self.vec[self.i + 3];
+        let original_rhs_id = self.vec[self.i + 4];
+
+        // Convert parameters to f64.
+        self.bound += 1;
+        let lhs_id = self.bound;
+        self.vec.insert(self.i, 115 | (4 << 16));
+        self.vec.insert(self.i + 1, u64_id);
+        self.vec.insert(self.i + 2, lhs_id);
+        self.vec.insert(self.i + 3, original_lhs_id);
+
+        self.bound += 1;
+        let rhs_id = self.bound;
+        self.vec.insert(self.i + 4, 115 | (4 << 16));
+        self.vec.insert(self.i + 5, u64_id);
+        self.vec.insert(self.i + 6, rhs_id);
+        self.vec.insert(self.i + 7, original_rhs_id);
+
+        self.i += 8;
 
         // Replace op code id.
         let final_id = self.vec[self.i + 2];
@@ -103,37 +144,18 @@ impl<'a> Buffer<'a> {
         let op_id = self.bound;
         self.vec[self.i + 2] = op_id;
 
-        // Bitcast to uint.
-        self.bound += 1;
-        let bitcast_id = self.bound;
-        self.vec.insert(self.i + 5, 124 | (4 << 16));
-        self.vec.insert(self.i + 6, u32_id);
-        self.vec.insert(self.i + 7, bitcast_id);
-        self.vec.insert(self.i + 8, op_id);
-
-        // Logical shift to right.
-        self.bound += 1;
-        let right_shift_id = self.bound;
-        self.vec.insert(self.i + 9, 194 | (5 << 16));
-        self.vec.insert(self.i + 10, u32_id);
-        self.vec.insert(self.i + 11, right_shift_id);
-        self.vec.insert(self.i + 12, bitcast_id);
-        self.vec.insert(self.i + 13, i32_3);
-
-        // Logical shift to left.
-        self.bound += 1;
-        let left_shift_id = self.bound;
-        self.vec.insert(self.i + 14, 196 | (5 << 16));
-        self.vec.insert(self.i + 15, u32_id);
-        self.vec.insert(self.i + 16, left_shift_id);
-        self.vec.insert(self.i + 17, right_shift_id);
-        self.vec.insert(self.i + 18, i32_3);
-
-        // Bitcast to float.
+        // Replace op code type.
         let final_type_id = self.vec[self.i + 1];
-        self.vec.insert(self.i + 19, 124 | (4 << 16));
-        self.vec.insert(self.i + 20, final_type_id);
-        self.vec.insert(self.i + 21, final_id);
-        self.vec.insert(self.i + 22, left_shift_id);
+        self.vec[self.i + 1] = u64_id;
+
+        // Replace parameters.
+        self.vec[self.i + 3] = lhs_id;
+        self.vec[self.i + 4] = rhs_id;
+
+        // Convert result to f32.
+        self.vec.insert(self.i + 5, 115 | (4 << 16));
+        self.vec.insert(self.i + 6, final_type_id);
+        self.vec.insert(self.i + 7, final_id);
+        self.vec.insert(self.i + 8, op_id);
     }
 }
