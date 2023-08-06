@@ -87,8 +87,8 @@ impl<T> Compute<T> where T: BufferContents + Clone {
             }
 
             int GBitScanReverse64(int64_t num) {
-                for (int i = 64; i >= 0; i--) {
-                    if ((num & (1 << int64_t(i))) != 0)
+                for (int i = 63; i >= 0; i--) {
+                    if ((num & (int64_t(1) << int64_t(i))) != 0)
                         return i;
                 }
                 return 0;
