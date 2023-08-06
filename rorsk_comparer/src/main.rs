@@ -5,15 +5,19 @@ lazy_static::lazy_static! {
 
     static ref VENDOR_IDS: HashMap<u32, &'static str> = {
         let mut m = HashMap::new();
+        m.insert(4098, "AMD");
         m.insert(4318, "NVIDIA");
         m.insert(6880, "Google");
+        m.insert(32902, "Intel");
         m
     };
 
     static ref DEVICE_IDS: HashMap<u32, &'static str> = {
         let mut m = HashMap::new();
+        m.insert(29695, "Radeon RX 6600 XT");
         m.insert(9988, "RTX 4080");
         m.insert(49374, "Swiftshader");
+        m.insert(22176, "Arc A770 Graphics");
         m
     };
 }
@@ -129,7 +133,7 @@ fn compare_difference(expected: &mut Iter<'_, u8>, data: &mut Iter<'_, u8>, type
             if let Some(a) = read_i32(expected) {
                 if let Some(b) = read_i32(data) {
                     if a != b {
-                        //println!("i32 {:b} {:b} {}", a, b, (a - b).abs());
+                        //println!("i32 {} {} {}", a, b, (a - b).abs());
                     }
 
                     return Some(a != b);
@@ -149,8 +153,8 @@ fn compare_difference(expected: &mut Iter<'_, u8>, data: &mut Iter<'_, u8>, type
                         compare = !b.is_infinite();
                     }
 
-                    if compare && is_conformant {
-                        //println!("f32 {:b} {:b} {}", a.to_bits(), b.to_bits(), (a.to_bits() as i64 - b.to_bits() as i64).abs());
+                    if compare && is_conformant && (a.to_bits() as i64 - b.to_bits() as i64).abs() > 1 {
+                        //println!("f32 {:b} {:b} {}", a.to_bits(), b.to_bits(), (a - b).abs());
                     }
                     return Some(compare);
                 }

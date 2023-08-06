@@ -47,10 +47,49 @@ impl<'a> Buffer<'a> {
             let word_count = self.vec[self.i] >> 16;
 
             match self.vec[self.i] & 0xFFFF {
+                /*16 => {
+                    // Enable Round capabilty.
+                    /*self.vec.insert(7, 17 | (2 << 16));
+                    self.vec.insert(8, 4465);
+
+                    self.i += 2;*/
+
+                    // Enable Round capabilty.
+                    self.vec.insert(7, 17 | (2 << 16));
+                    self.vec.insert(8, 4468);
+
+                    self.i += 2;
+
+                    let entry_point = self.vec[self.i + 1];
+                    /*self.vec.insert(self.i, 16 | (4 << 16));
+                    self.vec.insert(self.i + 1, entry_point);
+                    self.vec.insert(self.i + 2, 4460);
+                    self.vec.insert(self.i + 3, 32);
+                    self.i += 4;*/
+
+                    self.vec.insert(self.i, 16 | (4 << 16));
+                    self.vec.insert(self.i + 1, entry_point);
+                    self.vec.insert(self.i + 2, 4463);
+                    self.vec.insert(self.i + 3, 32);
+                    self.i += 4;
+                },*/
+                71 => {
+                    self.op_type_index = self.i;
+                },
                 // OpTypeVoid
-                19 => self.op_type_index = self.i,
+                //19 => self.op_type_index = self.i,
                 // OpFDiv
-                136 => self.op_fdiv(),
+                //136 => self.op_fdiv(),
+                136 => {
+                    let result_id = self.vec[self.i + 2];
+
+                    self.vec.insert(self.op_type_index, 71 | (4 << 16));
+                    self.vec.insert(self.op_type_index + 1, result_id);
+                    self.vec.insert(self.op_type_index + 2, 39);
+                    self.vec.insert(self.op_type_index + 3, 1);
+
+                    self.i += 4;
+                }
                 _ => {}
             };
 

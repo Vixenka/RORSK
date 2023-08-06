@@ -26,7 +26,7 @@ impl<T> Compute<T> where T: BufferContents + Clone {
         let offset = self.initial_data.len() / 2;
 
         let mut spirv_code = Vec::new();
-        glsl_to_spirv::compile(&format!("{}{glsl_type}{}{glsl_type}{}{glsl_type}{}{offset}{}{glsl_type}{}{expression}{}", r#"
+        /*glsl_to_spirv::compile(&format!("{}{glsl_type}{}{glsl_type}{}{glsl_type}{}{offset}{}{glsl_type}{}{expression}{}", r#"
             #version 450
 
             layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
@@ -44,13 +44,106 @@ impl<T> Compute<T> where T: BufferContents + Clone {
 
                 data[gl_GlobalInvocationID.x] = r;
             }
-        "#), glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();
+        "#), glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();*/
+
+        glsl_to_spirv::compile(r#"
+            #version 450
+            #extension GL_ARB_gpu_shader_int64 : enable
+
+            int FromFractionAndExp(int traw32, int exp) {
+                if (exp < 0)
+                    return 0;
+
+                exp = min(exp, 255);
+                return (traw32 << 8) | (exp & 0xFF);
+            }
+
+            int FromFloat(float value) {
+                if (value == 0)
+                    return 0;
+
+                int t754raw = floatBitsToInt(value);
+                int tRaction = (t754raw & 0x007FFFFF) + 0x00800000;
+                int exponent = (t754raw & 0x7FFFFFFF) >> 23;
+
+                if (t754raw < 0)
+                    tRaction = -tRaction;
+
+                return FromFractionAndExp(tRaction >> 1, exponent - 22);
+            }
+
+            int GetFraction(int gfloat) {
+                return gfloat >> 8;
+            }
+
+            int GetExponent(int gfloat) {
+                return gfloat & 0xFF;
+            }
+
+            float ToFloat(int gfloat) {
+                int exponent = GetExponent(gfloat) - 127;
+                float dt = pow(2, exponent);
+                return float(GetFraction(gfloat)) * dt;
+            }
+
+            int GBitScanReverse64(int64_t num) {
+                for (int i = 64; i >= 0; i--) {
+                    if ((num & (1 << int64_t(i))) != 0)
+                        return i;
+                }
+                return 0;
+            }
+
+            int Normalize64(int64_t trawValue, int tExponent) {
+                if (trawValue == 0)
+                    return 0;
+
+                int index = GBitScanReverse64(abs(trawValue));
+                if (index <= 22) {
+                    int uDelta = 22 - index;
+                    return FromFractionAndExp(int(trawValue << uDelta), tExponent - uDelta);
+                } else {
+                    int uDelta = index - 22;
+                    return FromFractionAndExp(int(trawValue >> uDelta), tExponent + uDelta);
+                }
+            }
+
+            int GDiv(int lhs, int rhs) {
+                int nDivid = GetFraction(rhs);
+                if (nDivid == 0)
+                    return 0;
+
+                int64_t trawValue = (int64_t(GetFraction(lhs)) << 32) / nDivid;
+                int tExponent = GetExponent(lhs) - GetExponent(rhs) + 95;
+
+                return Normalize64(trawValue, tExponent);
+            }
+
+            float Div(float lhs, float rhs) {
+                return ToFloat(GDiv(FromFloat(lhs), FromFloat(rhs)));
+            }
+
+            layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+            layout(set = 0, binding = 0) buffer Data {
+                float data[];
+            };
+
+            void main() {
+                float a = data[gl_GlobalInvocationID.x];
+                float b = data[gl_GlobalInvocationID.x + 4000000];
+
+                float r = Div(a, b);
+
+                data[gl_GlobalInvocationID.x] = r;
+            }
+        "#, glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();
 
         self.compute_impl(problem_name, &spirv_code, false);
 
-        let conformant = conformant::process(spirv_code);
-        //let mut file = File::create(problem_name).unwrap();
-        //file.write_all(&conformant).unwrap();
+        let conformant = spirv_code;//conformant::process(spirv_code);
+        let mut file = File::create(problem_name).unwrap();
+        file.write_all(&conformant).unwrap();
 
         self.compute_impl(problem_name, &conformant, true);
     }

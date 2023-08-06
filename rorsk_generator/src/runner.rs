@@ -53,7 +53,7 @@ pub fn run<T>(
                 .iter()
                 .position(|q| q.queue_flags.intersects(QueueFlags::COMPUTE))
                 .map(|i| (p, i as u32))
-        })
+        }).skip(1)
         .min_by_key(|(p, _)| match p.properties().device_type {
             PhysicalDeviceType::DiscreteGpu => 0,
             PhysicalDeviceType::IntegratedGpu => 1,
@@ -80,7 +80,7 @@ pub fn run<T>(
                 ..Default::default()
             }],
             enabled_features: Features {
-                shader_float64: true,
+                shader_int64: true,
                 ..Default::default()
             },
             ..Default::default()

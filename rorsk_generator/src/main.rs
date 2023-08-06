@@ -11,7 +11,7 @@ const DATA_SIZE: usize = 16 * 1000 * 1000; // 16 MB.
 
 fn main() {
     f32_problems();
-    i32_problems();
+    //i32_problems();
 }
 
 fn f32_problems() {
@@ -21,9 +21,9 @@ fn f32_problems() {
     }
     let c = Compute::new(vec);
 
-    c.compute("f32-add", "float", "r = a + b;");
-    c.compute("f32-sub", "float", "r = a - b;");
-    c.compute("f32-mul", "float", "r = a * b;");
+    //c.compute("f32-add", "float", "r = a + b;");
+    //c.compute("f32-sub", "float", "r = a - b;");
+    //c.compute("f32-mul", "float", "r = a * b;");
     c.compute("f32-div", "float", "r = a / b;");
 }
 
