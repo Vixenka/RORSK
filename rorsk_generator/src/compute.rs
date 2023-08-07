@@ -26,7 +26,7 @@ impl<T> Compute<T> where T: BufferContents + Clone {
         let offset = self.initial_data.len() / 2;
 
         let mut spirv_code = Vec::new();
-        /*glsl_to_spirv::compile(&format!("{}{glsl_type}{}{glsl_type}{}{glsl_type}{}{offset}{}{glsl_type}{}{expression}{}", r#"
+        glsl_to_spirv::compile(&format!("{}{glsl_type}{}{glsl_type}{}{glsl_type}{}{offset}{}{glsl_type}{}{expression}{}", r#"
             #version 450
 
             layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
@@ -44,9 +44,9 @@ impl<T> Compute<T> where T: BufferContents + Clone {
 
                 data[gl_GlobalInvocationID.x] = r;
             }
-        "#), glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();*/
+        "#), glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();
 
-        glsl_to_spirv::compile(r#"
+        /*glsl_to_spirv::compile(r#"
             #version 450
             #extension GL_ARB_gpu_shader_int64 : enable
 
@@ -137,14 +137,11 @@ impl<T> Compute<T> where T: BufferContents + Clone {
 
                 data[gl_GlobalInvocationID.x] = r;
             }
-        "#, glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();
+        "#, glsl_to_spirv::ShaderType::Compute).unwrap().read_to_end(&mut spirv_code).unwrap();*/
 
         self.compute_impl(problem_name, &spirv_code, false);
 
-        let conformant = spirv_code;//conformant::process(spirv_code);
-        let mut file = File::create(problem_name).unwrap();
-        file.write_all(&conformant).unwrap();
-
+        let conformant = conformant::process(spirv_code);
         self.compute_impl(problem_name, &conformant, true);
     }
 
