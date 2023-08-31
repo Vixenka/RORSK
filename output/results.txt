@@ -1,11 +1,53 @@
 
-Problem `f32-mul` on conformant was tested with devices:
+Problem `i32-sub` on unconformant was tested with devices:
   - Intel Arc A770 Graphics
   - AMD Radeon RX 6600 XT
 Results:
   - Data count: 128000000 bits
   - Number of differences: 0
-Problem `f32-sub` on conformant was tested with devices:
+Problem `i32-sub` on conformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-div` on unconformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-mul` on conformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-div` on conformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-add` on unconformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-add` on conformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `i32-mul` on unconformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-div` on conformant was tested with devices:
   - Intel Arc A770 Graphics
   - AMD Radeon RX 6600 XT
 Results:
@@ -23,13 +65,7 @@ Problem `f32-add` on conformant was tested with devices:
 Results:
   - Data count: 128000000 bits
   - Number of differences: 0
-Problem `f32-sub` on unconformant was tested with devices:
-  - Intel Arc A770 Graphics
-  - AMD Radeon RX 6600 XT
-Results:
-  - Data count: 128000000 bits
-  - Number of differences: 0
-Problem `f32-div` on conformant was tested with devices:
+Problem `f32-sub` on conformant was tested with devices:
   - Intel Arc A770 Graphics
   - AMD Radeon RX 6600 XT
 Results:
@@ -42,6 +78,18 @@ Results:
   - Data count: 128000000 bits
   - Number of differences: 0
 Problem `f32-mul` on unconformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-sub` on unconformant was tested with devices:
+  - Intel Arc A770 Graphics
+  - AMD Radeon RX 6600 XT
+Results:
+  - Data count: 128000000 bits
+  - Number of differences: 0
+Problem `f32-mul` on conformant was tested with devices:
   - Intel Arc A770 Graphics
   - AMD Radeon RX 6600 XT
 Results:

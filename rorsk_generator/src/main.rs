@@ -30,7 +30,11 @@ fn f32_problems() {
 fn i32_problems() {
     let mut vec = Vec::with_capacity(DATA_SIZE / mem::size_of::<i32>() * 2);
     for i in 0..vec.capacity() {
-        vec.push(noise::white_noise_1d_f32(i) as i32);
+        let mut e = ((noise::white_noise_1d_f32(i) - 0.5) * 1000000000.0) as i32;
+        if e == 0 {
+            e = 1;
+        }
+        vec.push(e);
     }
 
     let mut has_positive = false;
