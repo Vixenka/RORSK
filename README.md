@@ -24,4 +24,4 @@ cargo run
 also in their directories.
 
 ## Legal notes
-RORSK is licensed under the [MIT](/LICENSE) license and was created under the action "NAKOLATEK - Nastoletni Naukowiec" funded by Minister Education and Science of government of the Republic of Poland as part of VIA CARPATIA polytechnic network named after President of Republic of Poland Lech Kaczyński.
+RORSK is licensed under the [MIT](/LICENSE) license and was created under the action "NAUKOLATEK - Nastoletni Naukowiec" funded by Minister Education and Science of government of the Republic of Poland as part of VIA CARPATIA polytechnic network named after President of Republic of Poland Lech Kaczyński.
